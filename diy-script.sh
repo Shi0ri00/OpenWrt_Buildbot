@@ -12,22 +12,16 @@ sed -i 's/192.168.1.1/192.168.2.203/g' package/base-files/files/bin/config_gener
 # 移除重复软件包
 rm -rf feeds/packages/net/mosdns
 rm -rf feeds/luci/themes/luci-theme-argon
-rm -rf feeds/luci/themes/luci-theme-netgear
-rm -rf feeds/luci/applications/luci-app-wrtbwmon
 rm -rf feeds/luci/applications/luci-app-dockerman
 
 # 添加额外软件包
 git clone --depth 1 https://github.com/esirplayground/luci-app-poweroff package/luci-app-poweroff
 svn co https://github.com/Lienol/openwrt-package/trunk/luci-app-filebrowser package/luci-app-filebrowser
 svn co https://github.com/lisaac/luci-app-dockerman/trunk/applications/luci-app-dockerman package/luci-app-dockerman
-svn co https://github.com/immortalwrt/luci/branches/openwrt-18.06/applications/luci-app-eqos package/luci-app-eqos
-
 # 科学上网插件
 git clone --depth 1 https://github.com/jerrykuku/lua-maxminddb package/lua-maxminddb
-svn co https://github.com/kiddin9/openwrt-packages/trunk/luci-app-bypass package/luci-app-bypass
 svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/luci-app-openclash
 svn co https://github.com/xiaorouji/openwrt-passwall/branches/luci/luci-app-passwall package/luci-app-passwall
-svn co https://github.com/xiaorouji/openwrt-passwall2/trunk/luci-app-passwall2 package/luci-app-passwall2
 svn co https://github.com/fw876/helloworld/trunk/luci-app-ssr-plus package/luci-app-ssr-plus
 
 # 科学上网插件依赖
@@ -68,9 +62,6 @@ sed -i "s|https.*/OpenWrt|https://github.com/RustyCore856/OpenWrt|g" package/luc
 sed -i "s|opt/kernel|https://github.com/ophub/kernel/tree/main/pub/stable|g" package/luci-app-amlogic/root/etc/config/amlogic
 sed -i "s|ARMv8|ARMv8_PLUS|g" package/luci-app-amlogic/root/etc/config/amlogic
 
-# 流量监控
-svn co https://github.com/haiibo/packages/trunk/luci-app-wrtbwmon package/luci-app-wrtbwmon
-svn co https://github.com/haiibo/packages/trunk/wrtbwmon package/wrtbwmon
 
 # Alist
 svn co https://github.com/sbwml/luci-app-alist/trunk/luci-app-alist package/luci-app-alist

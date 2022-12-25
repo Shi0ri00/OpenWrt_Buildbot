@@ -1,19 +1,7 @@
-#===============================================
-# Description: ARMv8 Package
-# File name: armv8-package.yml
-# Lisence: MIT
-# Author: HAIIBO
-# https://github.com/haiibo
-#===============================================
-
 name: ARMv8 Package
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: 0 15 * * *
-  watch:
-    types: started
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -24,20 +12,10 @@ env:
 jobs:
   Package:
     runs-on: ubuntu-22.04
-    if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
-    name: Package for ${{ matrix.version }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-        - version: MINI
-          explain: 这是 ARMv8 精简版，只集成了一些常用插件
-        - version: PLUS
-          explain: 这是 ARMv8 多功能版，集成插件多适合折腾
-
+    name: Package for ARMv8
     env:
-      VERSION: ${{ matrix.version }}
-      EXPLAIN: ${{ matrix.explain }}
+      VERSION: PLUS
+      EXPLAIN: ARMv8
 
     steps:
     - name: Checkout
@@ -102,7 +80,7 @@ jobs:
         body: |
           **This is OpenWrt Firmware for Armvirt 64**
           * ${{ env.EXPLAIN }}
-          默认 IP：192.168.1.1 默认密码：password
+          默认 IP：192.168.2.203 默认密码：password
           安装到 EMMC：系统 → 晶晨宝盒 → 安装 OpenWrt → 选择型号 → 安装
           升级 OpenWrt：系统 → 晶晨宝盒 → 手动上传更新 或者 在线下载更新
           当前使用版本:【编译前的最后一次➦[主源码](https://github.com/coolsnowwolf/lede)更新记录】

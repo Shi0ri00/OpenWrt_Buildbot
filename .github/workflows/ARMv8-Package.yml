@@ -47,7 +47,6 @@ jobs:
         echo "DATE1=$(date +"%y.%m.%d")" >> $GITHUB_ENV
 
     - name: Package OpenWrt Firmware
-      if: steps.download.outputs.status == 'success'
       uses: ophub/flippy-openwrt-actions@main
       env:
         OPENWRT_ARMVIRT: https://github.com/RustyCore856/OpenWrt/releases/download/ROOTFS/openwrt-armvirt-64-default-rootfs.tar.gz

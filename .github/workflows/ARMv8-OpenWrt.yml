@@ -367,22 +367,11 @@ jobs:
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
 
-    - name: Download Armvirt Firmware
-      id: download
-      run: |
-        [ -d openwrt-armvirt ] || mkdir -p openwrt-armvirt
-        curl -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases" | grep -o "$FIRMWARE_TAG.*rootfs.tar.gz" > DOWNLOAD_ARMVIRT
-        [ -s DOWNLOAD_ARMVIRT ]
-        wget -q -P openwrt-armvirt https://github.com/$GITHUB_REPOSITORY/releases/download/$(cat DOWNLOAD_ARMVIRT)
-        echo "status=success" >> $GITHUB_OUTPUT
-        echo "DATE=$(date +"%Y-%m-%d %H:%M:%S")" >> $GITHUB_ENV
-        echo "DATE1=$(date +"%Y.%m.%d")" >> $GITHUB_ENV
-
     - name: Package OpenWrt Firmware
       if: steps.download.outputs.status == 'success'
       uses: unifreq/openwrt_packit@master
       env:
-        OPENWRT_ARMVIRT: openwrt-armvirt/*rootfs.tar.gz
+        OPENWRT_ARMVIRT: https://github.com/RustyCore856/OpenWrt/releases/download/ROOTFS/openwrt-armvirt-64-default-rootfs.tar.gz
         PACKAGE_SOC: s905d
         WHOAMI: Shiori
         KERNEL_REPO_URL: https://github.com/ophub/kernel/tree/main/pub/stable

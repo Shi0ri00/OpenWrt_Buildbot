@@ -368,7 +368,6 @@ jobs:
         sudo timedatectl set-timezone "$TZ"
 
     - name: Package OpenWrt Firmware
-      if: steps.download.outputs.status == 'success'
       uses: unifreq/openwrt_packit@master
       env:
         OPENWRT_ARMVIRT: https://github.com/RustyCore856/OpenWrt/releases/download/ROOTFS/openwrt-armvirt-64-default-rootfs.tar.gz

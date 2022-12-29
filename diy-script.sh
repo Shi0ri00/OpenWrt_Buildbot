@@ -10,8 +10,8 @@
 # 修改默认IP
 sed -i 's/192.168.1.1/192.168.2.203/g' package/base-files/files/bin/config_generate
 
-# Change default shell to zsh
-# sed -i 's/\/bin\/ash/\/usr\/bin\/zsh/g' package/base-files/files/etc/passwd
+# Change default shell to fish
+sed -i 's/\/bin\/bash/\/usr\/bin\/fish/g' package/base-files/files/etc/passwd
 
 # 移除重复软件包
 rm -rf feeds/luci/themes/luci-theme-argon

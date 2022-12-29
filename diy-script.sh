@@ -78,6 +78,10 @@ sed -i "s|opt/kernel|https://github.com/ophub/kernel/tree/main/pub/stable|g" pac
 svn co https://github.com/sbwml/luci-app-mosdns/trunk/luci-app-mosdns package/luci-app-mosdns
 svn co https://github.com/sbwml/luci-app-mosdns/trunk/mosdns package/mosdns
 
+# Alist
+svn co https://github.com/sbwml/luci-app-alist/trunk/luci-app-alist package/luci-app-alist
+svn co https://github.com/sbwml/luci-app-alist/trunk/alist package/alist
+
 # 流量监控
 svn co https://github.com/haiibo/packages/trunk/luci-app-wrtbwmon package/luci-app-wrtbwmon
 svn co https://github.com/haiibo/packages/trunk/wrtbwmon package/wrtbwmon

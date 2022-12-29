@@ -16,7 +16,6 @@ sed -i 's/\/bin\/bash/\/usr\/bin\/fish/g' package/base-files/files/etc/passwd
 # 移除重复软件包
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf feeds/luci/applications/luci-app-netdata
-rm -rf feeds/luci/applications/luci-app-wrtbwmon
 rm -rf feeds/luci/applications/luci-app-dockerman
 
 # 添加额外软件包
@@ -81,15 +80,6 @@ svn co https://github.com/sbwml/luci-app-mosdns/trunk/mosdns package/mosdns
 # Alist
 svn co https://github.com/sbwml/luci-app-alist/trunk/luci-app-alist package/luci-app-alist
 svn co https://github.com/sbwml/luci-app-alist/trunk/alist package/alist
-
-# 流量监控
-svn co https://github.com/haiibo/packages/trunk/luci-app-wrtbwmon package/luci-app-wrtbwmon
-svn co https://github.com/haiibo/packages/trunk/wrtbwmon package/wrtbwmon
-
-# 在线用户
-svn co https://github.com/haiibo/packages/trunk/luci-app-onliner package/luci-app-onliner
-sed -i '/bin\/sh/a\uci set nlbwmon.@nlbwmon[0].refresh_interval=2s' package/lean/default-settings/files/zzz-default-settings
-sed -i '/nlbwmon/a\uci commit nlbwmon' package/lean/default-settings/files/zzz-default-settings
 
 # 调整 x86 型号只显示 CPU 型号
 sed -i 's/${g}.*/${a}${b}${c}${d}${e}${f}/g' package/lean/autocore/files/x86/autocore

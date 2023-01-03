@@ -52,7 +52,7 @@ svn co https://github.com/fw876/helloworld/trunk/trojan package/trojan
 svn co https://github.com/fw876/helloworld/trunk/redsocks2 package/redsocks2
 
 # Themes
-git clone --depth 1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
+git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
 git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
 git clone --depth 1 https://github.com/thinktip/luci-theme-neobird package/luci-theme-neobird
 

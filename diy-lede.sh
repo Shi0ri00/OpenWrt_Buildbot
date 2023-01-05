@@ -8,7 +8,7 @@
 #===============================================
 
 # 修改默认IP
-sed -i 's/192.168.1.1/192.168.2.203/g' package/base-files/files/bin/config_generate
+sed -i 's/192.168.1.1/10.0.0.2/g' package/base-files/files/bin/config_generate
 
 # 移除重复软件包
 rm -rf feeds/luci/themes/luci-theme-argon

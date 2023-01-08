@@ -61,9 +61,16 @@ svn co https://github.com/ophub/luci-app-amlogic/trunk/luci-app-amlogic package/
 sed -i "s|https.*/OpenWrt|https://github.com/RustyCore856/OpenWrt|g" package/luci-app-amlogic/root/etc/config/amlogic
 sed -i "s|opt/kernel|https://github.com/ophub/kernel/tree/main/pub/stable|g" package/luci-app-amlogic/root/etc/config/amlogic
 
+# MosDNS
+svn co https://github.com/sbwml/luci-app-mosdns/trunk/luci-app-mosdns package/luci-app-mosdns
+svn co https://github.com/sbwml/luci-app-mosdns/trunk/mosdns package/mosdns
+
 # Alist
 svn co https://github.com/sbwml/luci-app-alist/trunk/luci-app-alist package/luci-app-alist
 svn co https://github.com/sbwml/luci-app-alist/trunk/alist package/alist
+
+# 调整 x86 型号只显示 CPU 型号
+sed -i 's/${g}.*/${a}${b}${c}${d}${e}${f}/g' package/lean/autocore/files/x86/autocore
 
 # 修改版本为编译日期
 date_version=$(date +"%y.%m.%d")
@@ -83,6 +90,12 @@ find package/luci-theme-*/* -type f -name '*luci-theme-*' -print -exec sed -i '/
 sed -i '/"VPN"/d' feeds/luci/applications/luci-app-zerotier/luasrc/controller/zerotier.lua
 sed -i 's/vpn/services/g' feeds/luci/applications/luci-app-zerotier/luasrc/controller/zerotier.lua
 sed -i 's/vpn/services/g' feeds/luci/applications/luci-app-zerotier/luasrc/view/zerotier/zerotier_status.htm
+
+# 取消对 samba4 的菜单调整
+# sed -i '/samba4/s/^/#/' package/lean/default-settings/files/zzz-default-settings
+
+# 修改插件名字
+# sed -i 's/"带宽监控"/"监控"/g' `grep "带宽监控" -rl ./`
 
 ./scripts/feeds update -a
 ./scripts/feeds install -a

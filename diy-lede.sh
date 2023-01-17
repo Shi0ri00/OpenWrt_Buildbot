@@ -16,8 +16,8 @@ rm -rf feeds/packages/net/v2ray-geodata
 
 # 科学上网
 svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/luci-app-openclash
-echo "src-git PWpackages https://github.com/xiaorouji/openwrt-passwall.git;packages" >> feeds.conf.default
-echo "src-git PWluci https://github.com/xiaorouji/openwrt-passwall.git;luci" >> feeds.conf.default
+git clone https://github.com/xiaorouji/openwrt-passwall package/passwall
+git clone -b luci https://github.com/xiaorouji/openwrt-passwall package/passwall
 git clone https://github.com/xiaorouji/openwrt-passwall2 package/passwall2
 
 # Themes

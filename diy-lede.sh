@@ -16,8 +16,10 @@ rm -rf feeds/packages/net/v2ray-geodata
 
 # 科学上网
 svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/luci-app-openclash
-git clone https://github.com/xiaorouji/openwrt-passwall package/passwall
-git clone -b luci https://github.com/xiaorouji/openwrt-passwall package/passwall
+git clone https://github.com/xiaorouji/openwrt-passwall.git -b packages package/passwall_package
+git clone https://github.com/xiaorouji/openwrt-passwall.git -b luci package/passwall
+cp -rf package/passwall_package/* package/passwall
+rm -rf package/passwall_package
 git clone https://github.com/xiaorouji/openwrt-passwall2 package/passwall2
 
 # Themes

@@ -14,9 +14,6 @@ sed -i 's/192.168.1.1/10.0.0.2/g' package/base-files/files/bin/config_generate
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf feeds/packages/net/v2ray-geodata
 
-# Comment Samba4 invalid users
-sed -i 's/invalid users = root/#invalid users = root/g' feeds/packages/net/samba4/files/smb.conf.template
-
 # 科学上网
 svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/luci-app-openclash
 echo "src-git PWpackages https://github.com/xiaorouji/openwrt-passwall.git;packages" >> feeds.conf.default

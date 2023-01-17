@@ -15,6 +15,10 @@ sed -i 's/192.168.1.1/10.0.0.2/g' package/base-files/files/bin/config_generate
 
 # 移除重复软件包
 rm -rf feeds/luci/themes/luci-theme-argon
+rm -rf feeds/packages/net/v2ray-geodata
+
+# Comment Samba4 invalid users
+sed -i 's/invalid users = root/#invalid users = root/g' feeds/packages/net/samba4/files/smb.conf.template
 
 # 科学上网
 svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/luci-app-openclash
@@ -33,12 +37,11 @@ sed -i "s|https.*/OpenWrt|https://github.com/RustyCore856/OpenWrt|g" package/luc
 sed -i "s|opt/kernel|https://github.com/ophub/kernel/tree/main/pub/stable|g" package/luci-app-amlogic/root/etc/config/amlogic
 
 # MosDNS
-svn co https://github.com/sbwml/luci-app-mosdns/trunk/luci-app-mosdns package/luci-app-mosdns
-svn co https://github.com/sbwml/luci-app-mosdns/trunk/mosdns package/mosdns
+git clone https://github.com/sbwml/luci-app-mosdns package/mosdns
+git clone https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
 
 # Alist
-svn co https://github.com/sbwml/luci-app-alist/trunk/luci-app-alist package/luci-app-alist
-svn co https://github.com/sbwml/luci-app-alist/trunk/alist package/alist
+git clone https://github.com/sbwml/luci-app-alist package/alist
 
 # 调整 x86 型号只显示 CPU 型号
 sed -i 's/${g}.*/${a}${b}${c}${d}${e}${f}/g' package/lean/autocore/files/x86/autocore

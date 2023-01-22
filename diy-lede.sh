@@ -18,17 +18,16 @@ rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf feeds/packages/net/v2ray-geodata
 
 # 科学上网
-svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/luci-app-openclash
+git clone --depth=1 -b master https://github.com/vernesong/OpenClash package/luci-app-openclash
 git clone https://github.com/xiaorouji/openwrt-passwall.git -b packages package/passwall_package
 git clone https://github.com/xiaorouji/openwrt-passwall.git -b luci package/passwall
 cp -rf package/passwall_package/* package/passwall
 rm -rf package/passwall_package
 git clone https://github.com/xiaorouji/openwrt-passwall2 package/passwall2
 
-# Themes
+# Theme
 git clone --depth 1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
 git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
-git clone --depth 1 https://github.com/thinktip/luci-theme-neobird package/luci-theme-neobird
 
 # 晶晨宝盒
 svn co https://github.com/ophub/luci-app-amlogic/trunk/luci-app-amlogic package/luci-app-amlogic

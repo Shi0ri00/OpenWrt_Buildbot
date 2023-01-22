@@ -1,1 +1,1 @@
-<h1>OpenWrt — 固件云编译</h1>
+<h1>OpenWrt</h1>

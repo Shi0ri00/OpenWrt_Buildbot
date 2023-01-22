@@ -11,7 +11,7 @@ name: ARMv8 LEDE
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 16 * * FRI
+    - cron: 0 14 * * FRI
 
 env:
   SOURCE_URL: https://github.com/coolsnowwolf/lede
@@ -20,7 +20,6 @@ env:
   DIY_SCRIPT: diy-lede.sh
   TOOLCHAIN_TAG: Toolchain
   CLASH_KERNEL: armv8
-  UPLOAD_BIN_DIR: false
   FIRMWARE_RELEASE: true
   FIRMWARE_TAG: ROOTFS
   OPENWRT_RELEASE: true
@@ -136,13 +135,16 @@ jobs:
     - name: Generate Toolchain Image
       if: steps.hash.outputs.REBUILD_TOOLCHAIN == 'true'
       run: |
-        cd workspace
-        mkdir -p $GITHUB_WORKSPACE/output
-        mksquashfs openwrt $GITHUB_WORKSPACE/output/$TOOLCHAIN_IMAGE.img -force-gid 1001 -force-uid 1001 -comp zstd
-        echo $CURRENT_HASH > $GITHUB_WORKSPACE/output/$TOOLCHAIN_IMAGE.hash
-        ls -lh $GITHUB_WORKSPACE/output
+          cd workspace
+          mksquashfs openwrt $TOOLCHAIN_IMAGE -force-gid 1001 -force-uid 1001 -comp zstd
+          mkdir -p $GITHUB_WORKSPACE/output
+          split -d -b 1900M $TOOLCHAIN_IMAGE $GITHUB_WORKSPACE/output/$TOOLCHAIN_IMAGE.img.
+          rm $TOOLCHAIN_IMAGE
+          cd $OPENWRT_ROOT_PATH
+          echo $CURRENT_HASH > $GITHUB_WORKSPACE/output/toolchain-$SOURCE_OWNER-$SOURCE_REPO-$SOURCE_BRANCH-$DEVICE_TARGET-$DEVICE_SUBTARGET.hash
+          ls -lh $GITHUB_WORKSPACE/output
 
-    - name: Delete Old Toolchain Assets
+    - name: Delete Old Toolchain Assets From Release
       if: steps.hash.outputs.REBUILD_TOOLCHAIN == 'true'
       uses: mknejp/delete-release-assets@v1
       with:
@@ -152,7 +154,7 @@ jobs:
         fail-if-no-assets: false
         fail-if-no-release: false
 
-    - name: Upload Toolchain Image
+    - name: Upload Toolchain Image To Release
       if: steps.hash.outputs.REBUILD_TOOLCHAIN == 'true'
       uses: ncipollo/release-action@v1
       with:
@@ -162,7 +164,6 @@ jobs:
         tag: ${{ env.TOOLCHAIN_TAG }}
         token: ${{ secrets.R_TOKEN }}
         artifacts: output/*
-        body: OpenWrt 工具链镜像文件
 
   Build:
     needs: [Toolchain]
@@ -207,28 +208,32 @@ jobs:
 
     - name: Combine Disks
       run: |
-        sudo swapoff -a && sudo rm -f /mnt/swapfile
-        export ROOT_FREE_KB=$(df --block-size=1024 --output=avail / | tail -1)
-        export ROOT_LOOP_KB=$(expr $ROOT_FREE_KB - 1048576)
-        export ROOT_LOOP_BYTES=$(expr $ROOT_LOOP_KB \* 1024)
-        sudo fallocate -l $ROOT_LOOP_BYTES /root.img
-        export ROOT_LOOP_DEVNAME=$(sudo losetup -Pf --show /root.img)
-        sudo pvcreate -f $ROOT_LOOP_DEVNAME
-        export MNT_FREE_KB=$(df --block-size=1024 --output=avail /mnt | tail -1)
-        export MNT_LOOP_KB=$(expr $MNT_FREE_KB - 102400)
-        export MNT_LOOP_BYTES=$(expr $MNT_LOOP_KB \* 1024)
-        sudo fallocate -l $MNT_LOOP_BYTES /mnt/mnt.img
-        export MNT_LOOP_DEVNAME=$(sudo losetup -Pf --show /mnt/mnt.img)
-        sudo pvcreate -f $MNT_LOOP_DEVNAME
-        sudo vgcreate vgstorage $ROOT_LOOP_DEVNAME $MNT_LOOP_DEVNAME
-        sudo lvcreate -n lvstorage -l 100%FREE vgstorage
-        export LV_DEVNAME=$(sudo lvscan | awk -F "'" '{print $2}')
-        sudo mkfs.btrfs -L combinedisk $LV_DEVNAME
-        sudo mount -o compress=zstd $LV_DEVNAME $GITHUB_WORKSPACE
-        sudo chown -R runner:runner $GITHUB_WORKSPACE
-        mkdir $GITHUB_WORKSPACE/tmp && chmod 777 $GITHUB_WORKSPACE/tmp
-        sudo cp -rp /tmp/* $GITHUB_WORKSPACE/tmp
-        sudo mount -B $GITHUB_WORKSPACE/tmp /tmp && df -hT
+          sudo swapoff -a
+          sudo rm -f /mnt/swapfile
+          export ROOT_FREE_KB=$(df --block-size=1024 --output=avail / | tail -1)
+          export ROOT_LOOP_KB=$(expr $ROOT_FREE_KB - 1048576)
+          export ROOT_LOOP_BYTES=$(expr $ROOT_LOOP_KB \* 1024)
+          sudo fallocate -l $ROOT_LOOP_BYTES /root.img
+          export ROOT_LOOP_DEVNAME=$(sudo losetup -Pf --show /root.img)
+          sudo pvcreate -f $ROOT_LOOP_DEVNAME
+          export MNT_FREE_KB=$(df --block-size=1024 --output=avail /mnt | tail -1)
+          export MNT_LOOP_KB=$(expr $MNT_FREE_KB - 102400)
+          export MNT_LOOP_BYTES=$(expr $MNT_LOOP_KB \* 1024)
+          sudo fallocate -l $MNT_LOOP_BYTES /mnt/mnt.img
+          export MNT_LOOP_DEVNAME=$(sudo losetup -Pf --show /mnt/mnt.img)
+          sudo pvcreate -f $MNT_LOOP_DEVNAME
+          sudo vgcreate vgstorage $ROOT_LOOP_DEVNAME $MNT_LOOP_DEVNAME
+          sudo lvcreate -n lvstorage -l 100%FREE vgstorage
+          export LV_DEVNAME=$(sudo lvscan | awk -F "'" '{print $2}')
+          sudo mkfs.btrfs -L combinedisk $LV_DEVNAME
+          sudo mount -o compress=zstd $LV_DEVNAME $GITHUB_WORKSPACE
+          sudo chown -R runner:runner $GITHUB_WORKSPACE
+          mkdir $GITHUB_WORKSPACE/tmp
+          chmod 777 $GITHUB_WORKSPACE/tmp
+          sudo cp -rp /tmp/* $GITHUB_WORKSPACE/tmp
+          sudo mount -B $GITHUB_WORKSPACE/tmp /tmp
+          df -hT $GITHUB_WORKSPACE
+          sudo btrfs filesystem usage $GITHUB_WORKSPACE
 
     - name: Checkout
       run: |
@@ -306,13 +311,6 @@ jobs:
         echo -e "\n"
         sudo btrfs filesystem usage $GITHUB_WORKSPACE
 
-    - name: Upload Bin Directory
-      if: steps.generate.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
-      uses: actions/upload-artifact@main
-      with:
-        name: ${{ env.SOURCE_REPO }}-bin-${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}-${{ env.FILE_DATE }}
-        path: ${{ env.OPENWRT_PATH }}/bin
-
     - name: Organize Files
       if: steps.generate.outputs.status == 'success'
       run: |
@@ -343,7 +341,6 @@ jobs:
         artifacts: ${{ env.FIRMWARE_PATH }}/*
         body: |
           **This is Temporary Firmware for Armvirt 64**
-          当前使用版本:【编译前的最后一次[➦主源码](https://github.com/coolsnowwolf/lede)更新记录】
           ${{ env.VERSION_INFO }}
 
   Package:
@@ -400,10 +397,6 @@ jobs:
         artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
         body: |
           **This is OpenWrt Firmware for Armvirt 64**
-          默认 IP：192.168.2.203 默认密码：password
-          安装到 EMMC：系统 → 晶晨宝盒 → 安装 OpenWrt → 选择型号 → 安装
-          升级 OpenWrt：系统 → 晶晨宝盒 → 手动上传更新 或者 在线下载更新
-          当前使用版本:【编译前的最后一次➦[主源码](https://github.com/coolsnowwolf/lede)更新记录】
           ${{ env.VERSION_INFO }}
 
     - name: Telegram notification

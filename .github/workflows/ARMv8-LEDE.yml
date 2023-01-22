@@ -24,7 +24,7 @@ env:
   FIRMWARE_RELEASE: true
   FIRMWARE_TAG: ROOTFS
   OPENWRT_RELEASE: true
-  OPENWRT_ARTIFACT: false
+  OPENWRT_ARTIFACT: true
   OPENWRT_TAG: ARMv8
   TZ: Asia/Shanghai
 
@@ -408,9 +408,5 @@ jobs:
 
     - name: Telegram notification
       run: |
-        MSG="
-        编译时间：${{ env.DATE }}
-        OpenWrt 更新信息：${{ env.VERSION_INFO }}
-        ${{ env.DEVICE_TARGET  }} 编译完成
-        "
+        MSG="编译时间：${{ env.DATE }} OpenWrt 更新信息：${{ env.VERSION_INFO }} 编译完成"
         curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}&text=${MSG}"

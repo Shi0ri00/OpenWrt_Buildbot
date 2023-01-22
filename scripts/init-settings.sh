@@ -13,11 +13,6 @@ uci commit luci
 # Disable opkg signature check
 sed -i 's/option check_signature/# option check_signature/g' /etc/opkg.conf
 
-# Disable IPV6 ula prefix
-# sed -i 's/^[^#].*option ula/#&/' /etc/config/network
-
-# Check file system during boot
-# uci set fstab.@global[0].check_fs=1
-# uci commit fstab
-
+# TTYD auto login
+sed -i 's/\/bin\/login/\/bin\/login -f root/' /etc/init.d/ttyd
 exit 0

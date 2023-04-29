@@ -6,26 +6,25 @@ sed -i "/CYXluq4wUazHjmCDBCqXF/d" package/lean/default-settings/files/zzz-defaul
 # 修改默认IP
 sed -i 's/192.168.1.1/10.0.0.2/g' package/base-files/files/bin/config_generate
 
-# 移除重复软件包
+# 移除包
 rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf feeds/packages/net/v2ray-geodata
 
 # 科学上网
-svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/luci-app-openclash
-git clone https://github.com/xiaorouji/openwrt-passwall.git -b packages package/passwall_package
-git clone https://github.com/xiaorouji/openwrt-passwall.git -b luci package/passwall
-cp -rf package/passwall_package/* package/passwall
-rm -rf package/passwall_package
-git clone https://github.com/xiaorouji/openwrt-passwall2 package/passwall2
+git clone --depth=1 https://github.com/fw876/helloworld package/luci-app-ssr-plus
+git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall package/openwrt-passwall
+svn export https://github.com/xiaorouji/openwrt-passwall/branches/luci/luci-app-passwall package/luci-app-passwall
+svn export https://github.com/xiaorouji/openwrt-passwall2/trunk/luci-app-passwall2 package/luci-app-passwall2
+svn export https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/luci-app-openclash
 
 # Theme
 git clone --depth 1 -b 18.06 https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
 git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
 
 # 晶晨宝盒
-svn co https://github.com/ophub/luci-app-amlogic/trunk/luci-app-amlogic package/luci-app-amlogic
-sed -i "s|https.*/OpenWrt|https://github.com/RustyCore856/OpenWrt|g" package/luci-app-amlogic/root/etc/config/amlogic
-sed -i "s|opt/kernel|https://github.com/ophub/kernel/tree/main/pub/stable|g" package/luci-app-amlogic/root/etc/config/amlogic
+svn export https://github.com/ophub/luci-app-amlogic/trunk/luci-app-amlogic package/luci-app-amlogic
+sed -i "s|firmware_repo.*|firmware_repo'https://github.com/RustyCore856/OpenWrt'|g" package/luci-app-amlogic/root/etc/config/amlogic
+# sed -i "s|kernel_path.*|kernel_path 'https://github.com/ophub/kernel'|g" package/luci-app-amlogic/root/etc/config/amlogic
 
 # MosDNS
 git clone https://github.com/sbwml/luci-app-mosdns package/mosdns

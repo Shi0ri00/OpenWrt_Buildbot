@@ -5,9 +5,10 @@ uci set luci.main.mediaurlbase='/luci-static/argon'
 uci commit luci
 
 # Disable IPV6 ula prefix
-sed -i 's/^[^#].*option ula/#&/' /etc/config/network
+# sed -i 's/^[^#].*option ula/#&/' /etc/config/network
 
-# TTYD auto login
-sed -i 's/\/bin\/login/\/bin\/login -f root/' /etc/init.d/ttyd
+# Check file system during boot
+# uci set fstab.@global[0].check_fs=1
+# uci commit fstab
 
 exit 0

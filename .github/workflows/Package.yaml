@@ -46,7 +46,7 @@ jobs:
     - name: Package OpenWrt Firmware
       uses: ophub/flippy-openwrt-actions@main
       env:
-        OPENWRT_ARMVIRT: https://github.com/RustyCore856/OpenWrt_Buildbot/releases/download/ROOTFS/openwrt-armvirt-64-generic-rootfs.tar.gz
+        OPENWRT_ARMVIRT: https://github.com/RustyCore856/OpenWrt_Buildbot/releases/download/ROOTFS_PLUS/openwrt-armvirt-64-generic-rootfs.tar.gz
         PACKAGE_SOC: s905d
         WHOAMI: Shiori
         KERNEL_VERSION_NAME: 5.15.13_6.1.5
